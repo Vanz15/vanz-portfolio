@@ -13,8 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Website Clone",
-  description: "Pixel-perfect website clone",
+  title: "Aivann Martinez — I find problems, build solutions, and ship them",
+  description:
+    "Portfolio of Aivann Martinez: computer scientist and builder. I identify everyday problems, build and optimize solutions, and put them in front of the people who use them.",
+  metadataBase: new URL("https://aivann.dev"),
+  openGraph: {
+    title: "Aivann Martinez",
+    description:
+      "I find everyday problems, build and optimize solutions, and present them to users and stakeholders.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
