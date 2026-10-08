@@ -54,8 +54,24 @@ next-env.d.ts
 # Local settings (not project config)
 .claude/settings.local.json
 
-# Agent tooling — installed per-machine, not part of the site
+# Agent tooling — per-machine, not part of the site.
+# The template ships a clone-website skill across a dozen editor configs;
+# none of it belongs in a portfolio repo.
 .claude/skills/
+.cline/skills/
+.codex/skills/
+.kiro/skills/
+.roo/skills/
+.roo/commands/
+.augment/commands/
+.continue/commands/
+.cursor/commands/
+.gemini/commands/
+.opencode/commands/
+.windsurf/workflows/
+.amazonq/cli-agents/
+.github/skills/
+.claude/settings.local.json
 
 # Local temp files
 temp/
