@@ -178,9 +178,67 @@
   }
 }
 
+/* ---- Parallax drift ------------------------------------------------
+   An element travels its own height as it crosses the viewport, slower than
+   the page scrolls, so it reads as sitting at a different depth. One timeline
+   (`view()`) drives both the drift and the fade, so no scroll listener runs.
+
+   Three tiers, picked by how big the element is: big things move less, small
+   accents move more. Tune via --drift without touching the keyframes. */
+@keyframes drift {
+  from {
+    transform: translateY(calc(var(--drift, 32px) * -1));
+  }
+  to {
+    transform: translateY(var(--drift, 32px));
+  }
+}
+
+/* Line-by-line reveal: each line fades in on entry, holds, then fades out on
+   exit. Lines peel off the end first, mirroring how they arrived. */
+@keyframes reveal-line {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  22% {
+    opacity: 1;
+    transform: none;
+  }
+  78% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Fade + a gentle rise. Text gets far less travel than images: a paragraph
+   drifting 30px reads as broken, while 14px just feels alive. */
+@keyframes reveal-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  30% {
+    opacity: 1;
+    transform: none;
+  }
+  70% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
 /* Scroll reveal — fades in as the element enters the viewport and back out as
-   it leaves, in both scroll directions. The base state stays visible so
-   unsupported browsers and no-JS render the content normally. */
+   it leaves, in both scroll directions, with a slight vertical drift. The base
+   state stays visible so unsupported browsers and no-JS render it normally. */
 .reveal {
   opacity: 1;
 }
@@ -204,9 +262,17 @@
   /* Each child animates over its own slice of the container's scroll pass, so
      the cascade replays backwards when scrolling up. A transition-delay cannot
      do this: it counts time, not scroll position. */
-  .stagger {
+  .stagger,
+  .reveal-lines {
     view-timeline-name: --stagger;
     view-timeline-axis: block;
+  }
+  /* Same cascade as .stagger, but each line spends longer on screen so the
+     sequence is readable rather than a single flicker. */
+  .reveal-lines > * {
+    animation: reveal-line linear both;
+    animation-timeline: --stagger;
+    animation-range: cover calc(4% + var(--i, 0) * 7%) cover calc(96% - var(--i, 0) * 7%);
   }
   .stagger > * {
     animation: reveal-stagger linear both;
@@ -221,24 +287,98 @@
     animation-timeline: view();
     animation-range: cover;
   }
-  @keyframes reveal-fade {
-    0% {
+
+  /* ---- Drift tiers ----
+     `.drift` alone only moves. When combined with `.reveal` both animations
+     must be declared together — two separate `animation` declarations would
+     overwrite each other and the fade would silently vanish. */
+  .drift {
+    animation: drift linear both;
+    animation-timeline: view();
+    animation-range: contain;
+  }
+  /* Hero content is on screen at scroll 0, so a view() timeline has no range
+     left to travel. The hero variant tracks the page's scroll instead: it
+     drifts only as the section exits, which reads as depth on the way out. */
+  .drift-hero {
+    animation: drift linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 100vh;
+  }
+
+  /* ---- Load-in reveal for above-the-fold content --------------------
+     Hero blocks are fully in view at scroll 0, where a view() timeline has
+     no range left and the animation resolves to `none` — they simply appeared
+     with no fade. These play on a time-based one-shot instead, staggered by
+     --i, so the hero assembles itself on load. */
+  @keyframes reveal-in {
+    from {
       opacity: 0;
-      transform: translateY(16px);
+      transform: translateY(14px);
     }
-    30% {
+    to {
       opacity: 1;
       transform: none;
-    }
-    70% {
-      opacity: 1;
-      transform: none;
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-16px);
     }
   }
+  .reveal-in > * {
+    animation: reveal-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 0) * 110ms);
+  }
+  .reveal.drift {
+    animation:
+      drift linear both,
+      reveal-fade linear both;
+    animation-timeline: view(), view();
+    animation-range: contain, cover;
+  }
+  .drift-slow {
+    --drift: 70px;
+  }
+  .drift-hero {
+    --drift: 46px;
+  }
+  .drift-mid {
+    --drift: 55px;
+  }
+  .drift-fast {
+    --drift: 34px;
+  }
+}
+
+/* ---- Hero portrait hover shake ---------------------------------------
+   Only plays while hovered, so `animation-play-state` is paused at rest and
+   runs on :hover. Rotates a few degrees each way rather than translating, so
+   the polaroid looks like it is being knocked about without leaving its slot. */
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  15% {
+    transform: rotate(-5.5deg);
+  }
+  30% {
+    transform: rotate(1deg);
+  }
+  45% {
+    transform: rotate(-4.4deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+  78% {
+    transform: rotate(-2.9deg);
+  }
+}
+.portrait-shake {
+  animation: shake 620ms ease-in-out infinite;
+  animation-play-state: paused;
+  cursor: pointer;
+}
+.portrait-shake:hover,
+.portrait-shake:focus-visible {
+  animation-play-state: running;
 }
 
 /* Typewriter caret — sits after the text, blinks once typing completes */
@@ -321,13 +461,28 @@
     animation: none;
     transform: none;
   }
+  .portrait-shake {
+    animation: none;
+  }
   .typewriter-caret-blink {
     animation: none;
   }
   .reveal,
-  .stagger > * {
+  .stagger > *,
+  .reveal-lines > *,
+  .reveal-in > *,
+  .drift {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+  /* Zero the travel too: an element whose keyframe is disabled still keeps any
+     --drift a transform elsewhere left behind, which reads as a jump. */
+  .drift,
+  .drift-hero,
+  .drift-slow,
+  .drift-mid,
+  .drift-fast {
+    --drift: 0px;
   }
 }

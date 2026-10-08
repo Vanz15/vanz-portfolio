@@ -1,26 +1,29 @@
 import { ExternalLink } from "lucide-react";
 import { site } from "@/lib/content";
 import { Reveal } from "./reveal";
+import { RevealLines } from "./reveal-lines";
 import { Stagger } from "./stagger";
-import { TypeText } from "./typetext";
 
 export function Research() {
   return (
     <section id="research" className="border-t border-border/70">
       <div className="mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
-          <Reveal className="md:col-span-5">
-            <span className="inline-flex items-center rounded-full border border-border px-2.5 py-1 font-mono text-[11px] lowercase tracking-[0.14em] text-muted-foreground">
+          <RevealLines className="md:col-span-5">
+            <span className="inline-flex w-fit items-center rounded-full border border-border px-2.5 py-1 font-mono text-[11px] lowercase tracking-[0.14em] text-muted-foreground">
               case study
             </span>
             <h2 className="mt-4 text-2xl font-semibold tracking-tight md:text-4xl">
-              <TypeText text="Looking beyond model accuracy." speed={26} />
+              Looking beyond
+              <br className="hidden md:inline" /> model accuracy.
             </h2>
             <p className="mt-5 max-w-[50ch] text-[15px] leading-relaxed text-muted-foreground">
-              A pneumonia classifier can be highly accurate and still be looking
-              at the wrong things. My undergraduate thesis asked whether we
-              could detect that behavior and measure a model&rsquo;s reliability
-              before it is deployed in a clinical setting.
+              A pneumonia classifier can be highly accurate and still be
+              looking at the wrong things.
+              <br className="hidden md:inline" /> My undergraduate thesis asked
+              whether we could detect that behavior and measure a
+              <br className="hidden md:inline" /> model&rsquo;s reliability before
+              it is deployed in a clinical setting.
             </p>
             <a
               href={site.links.gaxRepo}
@@ -31,7 +34,7 @@ export function Research() {
               gax-safety on github
               <ExternalLink className="size-3.5" aria-hidden />
             </a>
-          </Reveal>
+          </RevealLines>
 
           <Reveal className="md:col-span-7">
             <figure className="rounded-2xl border border-border bg-surface p-7 md:p-9">

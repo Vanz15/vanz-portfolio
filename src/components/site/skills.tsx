@@ -1,18 +1,19 @@
 import { site, skillGroups } from "@/lib/content";
 import { Reveal } from "./reveal";
+import { RevealLines } from "./reveal-lines";
 import { Stagger } from "./stagger";
-import { TypeText } from "./typetext";
 
 export function Skills() {
   return (
     <section id="skills" className="border-t border-border/70">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-14 px-5 py-20 md:grid-cols-12 md:px-8 md:py-28">
         <div className="md:col-span-5">
-          <Reveal>
+          <RevealLines>
             <h2 className="text-2xl font-semibold tracking-tight md:text-4xl">
-              <TypeText text="The toolbox, and where I've used it." speed={26} />
+              Skills, experiences,
+              <br className="hidden md:inline" /> and everything in between.
             </h2>
-          </Reveal>
+          </RevealLines>
 
           <Reveal>
             <div className="mt-10 border-l-2 border-accent pl-4">
@@ -57,7 +58,7 @@ export function Skills() {
 
             <div className="border-t border-border/70 pt-4">
               <h3 className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                certifications
+                certificates
               </h3>
               <ul className="mt-2.5 space-y-1.5">
                 {site.certifications.map((cert) => (

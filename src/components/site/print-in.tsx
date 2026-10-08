@@ -46,7 +46,12 @@ export function PrintIn({
   return (
     <div
       ref={ref}
-      className={cn("print-in", phase === "printing" && "is-printing", phase === "bounce" && "is-printed", className)}
+      className={cn(
+        "print-in",
+        phase === "printing" && "is-printing",
+        phase === "bounce" && "is-printed",
+        className,
+      )}
     >
       {children}
     </div>

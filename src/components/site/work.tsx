@@ -2,9 +2,9 @@ import { ArrowUpRight } from "lucide-react";
 import { caseStudies, type CaseStudy } from "@/lib/content";
 import { CaseVideo } from "./case-video";
 import { PaperRequest } from "./paper-request";
+import { RevealLines } from "./reveal-lines";
 import { Stagger } from "./stagger";
 import { Reveal } from "./reveal";
-import { TypeText } from "./typetext";
 
 const stepLabel: Record<string, string> = {
   problem: "the problem",
@@ -114,8 +114,10 @@ function CaseRow({ study }: { study: CaseStudy }) {
           ))}
         </div>
 
-        <div className="mt-auto flex flex-1 flex-col pt-8">
-          <CaseImage study={study} />
+        <div className="mt-auto flex flex-1 flex-col pt-10">
+          <div className="reveal">
+            <CaseImage study={study} />
+          </div>
         </div>
       </div>
 
@@ -140,16 +142,16 @@ export function Work() {
   return (
     <section id="work" className="border-t border-border/70">
       <div className="mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
-        <Reveal>
+        <RevealLines>
           {/* one of the page's three small-caps labels */}
           <p className="section-label">selected works</p>
           <h2 className="mt-3 max-w-[38ch] text-2xl font-semibold tracking-tight md:text-4xl">
-            <TypeText
-              text="A collection of problems I found worth solving, things I built to solve them, and the thinking behind every decision."
-              speed={16}
-            />
+            A collection of problems I found worth solving,
+            <br className="hidden md:inline" /> things I built to solve them,
+            <br className="hidden md:inline" /> and the thinking behind every
+            decision.
           </h2>
-        </Reveal>
+        </RevealLines>
 
         <div className="mt-12 divide-y divide-border/70 border-y border-border/70">
           {caseStudies.map((study) => (

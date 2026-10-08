@@ -110,7 +110,7 @@ export const caseStudies: CaseStudy[] = [
     title: "Tabbin — notes that get out of the way",
     subtitle:
       "A Windows sticky-note dock with real users: hover the screen edge, notes appear, no account or setup required.",
-    meta: "2025 — · shipped · 10 releases, 191 downloads",
+    meta: "2025 — · shipped · 10 releases, 200 downloads",
     stack: ["Electron", "JavaScript", "Node", "electron-builder"],
     links: [
       { label: "readme", href: "https://github.com/Vanz15/tabbin#readme", external: true },
