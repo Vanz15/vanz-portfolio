@@ -1,63 +1,97 @@
 # vanz-portfolio
 
-My personal site. Next.js 16, React 19, Tailwind v4, TypeScript.
+Personal site and portfolio for Aivann Martinez. Built with Next.js 16, React 19,
+Tailwind CSS v4, and TypeScript.
 
-Live at [aivann.dev](https://aivann.dev). Source lives here, deploys go to Vercel.
+> [!NOTE]
+> This repository holds the source for the site. The deployed version lives at
+> [aivann.dev](https://aivann.dev).
 
-## What's in it
+## About
 
-Five sections, all content driven from one file:
+The site is a single-page portfolio covering three project case studies, the
+toolbox used to build them, and an undergraduate thesis on medical AI
+reliability. All copy, links, and project data are kept in a single module so
+content changes do not require touching components.
 
-- **Hero** — intro, portrait, social links
-- **Selected works** — three project case studies
-- **Toolbox** — the tools I actually reach for
-- **Research** — my undergraduate thesis on medical AI reliability
-- **Contact** — links and the rolling wordmark
+## Tech stack
 
-Copy, links and project data live in `src/lib/content.ts`. Editing that file is
-usually all you need to change what the site says.
+| Layer | Choice |
+| --- | --- |
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript (strict mode) |
+| UI | React 19, Tailwind CSS v4 |
+| Smooth scrolling | Lenis |
+| Hosting | Vercel |
 
-## Running it
+## Getting started
+
+Requires Node.js 24 or newer.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open [localhost:3000](http://localhost:3000).
+The site is served at [http://localhost:3000](http://localhost:3000).
 
-```bash
-npm run build     # production build
-npm run lint      # eslint
-npm run typecheck # tsc --noEmit
-```
+## Scripts
 
-Node 24 or newer.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
+| `npm run typecheck` | Run the TypeScript compiler in check mode |
+| `npm run check` | Run lint, typecheck, and build together |
 
-## How the motion works
+## Project structure
 
-Scroll animations are plain CSS, driven by `animation-timeline: view()`. No
-animation library. Each block's progress is tied to its position in the
-viewport rather than to elapsed time, so scrolling back up plays them in
-reverse for free.
-
-Smooth scrolling is [Lenis](https://github.com/darkroomengineering/lenis).
-
-Everything collapses under `@media (prefers-reduced-motion: reduce)`. If the
-animations look like they aren't running, check that setting first — Windows
-disables visual effects system-wide when it's on, and Chromium inherits that.
-
-## Layout
-
-```
+```text
 src/
-  app/            routes, layout, global styles
-  components/site/ one file per section
-  lib/content.ts  all copy and data
+├── app/                  # Routes, layout, global styles
+│   ├── globals.css       # Tailwind theme, scroll-driven animations
+│   └── layout.tsx        # Metadata and root layout
+├── components/
+│   └── site/             # One component per page section
+└── lib/
+    ├── content.ts        # All site copy and project data
+    └── utils.ts          # Shared helpers
 public/
-  images/ videos/ papers/
+├── images/               # Photography and project media
+├── videos/               # Demo recordings
+└── papers/               # Thesis PDF
 ```
 
-## Credits
+## How the scroll animations work
 
-Built on a Next.js starter template. The site's own code is mine.
+Motion is implemented with CSS scroll-driven animations using
+`animation-timeline: view()` rather than a JavaScript animation library.
+
+Each element's animation progress is bound to its position within the viewport
+instead of to elapsed time. As a result, scrolling back up naturally reverses
+the animation without any additional bookkeeping, and animations stay in sync
+with the scrollbar.
+
+Above-the-fold content cannot use a `view()` timeline because it is already in
+frame when the page loads, so those blocks use a one-shot load animation with a
+staggered delay.
+
+> [!IMPORTANT]
+> All animations are disabled under `prefers-reduced-motion: reduce`. If the
+> site appears static, check that setting first — Windows disables visual
+> effects system-wide when it is enabled, and Chromium inherits the preference.
+
+## Accessibility notes
+
+- Animated content is hidden from assistive technology and exposed as static
+  text through `aria-label`, so screen readers are not affected by the
+  scroll-driven transforms.
+- Keyboard focus states are defined for all interactive elements.
+- The site is fully usable with animation disabled.
+
+## Contributing
+
+Issues and pull requests are welcome. Run `npm run check` before submitting to
+confirm lint, types, and the production build all pass.

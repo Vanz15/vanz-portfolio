@@ -12,6 +12,16 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent tooling and agent instruction files. Not app source, and some of
+    // it is generated, so linting it only produces noise.
+    ".claude/**",
+    ".codex/**",
+    ".cursor/**",
+    ".roo/**",
+    ".opencode/**",
+    ".kiro/**",
+    ".windsurf/**",
+    "**/*.md",
   ]),
 ]);
 
