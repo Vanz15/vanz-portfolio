@@ -10,7 +10,7 @@ export function Footer() {
           {/* third of the page's three small-caps labels */}
           <p className="section-label">contact</p>
           <h2 className="mt-3 max-w-[24ch] text-2xl font-semibold tracking-tight md:text-4xl">
-            <TypeText text="Curious about something? Let&rsquo;s figure it out." speed={26} />
+            <TypeText text="Curious about something?\nLet&rsquo;s figure it out." speed={26} />
           </h2>
         </Reveal>
 

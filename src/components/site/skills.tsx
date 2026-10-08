@@ -17,18 +17,28 @@ export function Skills() {
 
           <Reveal>
             <div className="mt-10 border-l-2 border-accent pl-4">
-              <p className="font-mono text-xs tracking-[0.12em] text-accent">
-                {site.education.period}
-              </p>
-              <p className="mt-1 text-sm font-medium">{site.education.title}</p>
+              <div className="mb-2 flex items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-xs tracking-[0.12em] text-accent">
+                  education
+                </span>
+                <span className="font-mono text-xs tracking-[0.12em] text-accent">
+                  {site.education.period}
+                </span>
+              </div>
+              <p className="text-sm font-medium">{site.education.title}</p>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 {site.education.detail}
               </p>
             </div>
           </Reveal>
 
-          <Stagger>
-            <ul className="mt-8 space-y-5">
+          <Reveal className="mt-8">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-muted/50 px-2.5 py-0.5 font-mono text-xs tracking-[0.12em] text-muted-foreground">
+                experience
+              </span>
+            </div>
+            <ul className="space-y-5">
               {site.experience.map((entry) => (
                 <li key={entry.title} className="border-l-2 border-border pl-4">
                   <p className="font-mono text-xs tracking-[0.12em] text-accent">
@@ -41,7 +51,7 @@ export function Skills() {
                 </li>
               ))}
             </ul>
-          </Stagger>
+          </Reveal>
         </div>
 
         <Stagger className="space-y-8 md:col-span-7">

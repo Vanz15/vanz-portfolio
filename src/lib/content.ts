@@ -106,7 +106,7 @@ export type CaseStudy = {
 
 export const caseStudies: CaseStudy[] = [
   {
-    number: "01",
+    number: "01.",
     title: "Tabbin — notes that get out of the way",
     subtitle:
       "A Windows sticky-note dock with real users: hover the screen edge, notes appear, no account or setup required.",
@@ -149,7 +149,7 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    number: "02",
+    number: "02.",
     title: "Purch — budgeting as a conversation",
     subtitle:
       "A chat-based, LLM-powered expense tracker where logging a purchase is one message, not a form.",
@@ -186,7 +186,7 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    number: "03",
+    number: "03.",
     title: "GAX-Safety — when accuracy isn't enough",
     subtitle:
       "Undergraduate thesis: auditing whether a pneumonia classifier reasons from the lungs or from shortcuts. Outstanding Thesis Presenter.",
@@ -229,7 +229,7 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    number: "04",
+    number: "04.",
     title: "Job Hunter — automate the boring loop",
     subtitle:
       "A live n8n workflow that scrapes job boards, LLM-scores every listing against a resume, and files results to a sheet.",

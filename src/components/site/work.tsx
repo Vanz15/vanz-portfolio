@@ -148,8 +148,8 @@ export function Work() {
           <h2 className="mt-3 max-w-[38ch] text-2xl font-semibold tracking-tight md:text-4xl">
             A collection of problems I found worth solving,
             <br className="hidden md:inline" /> things I built to solve them,
-            <br className="hidden md:inline" /> and the thinking behind every
-            decision.
+            and the thinking
+            <br className="hidden md:inline" /> behind every decision.
           </h2>
         </RevealLines>
 

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Aivann Martinez — I find problems, build solutions, and ship them",
   description:
     "Portfolio of Aivann Martinez: computer scientist and builder. I identify everyday problems, build and optimize solutions, and put them in front of the people who use them.",
-  metadataBase: new URL("https://aivann.dev"),
+  metadataBase: new URL("https://aivann-dev.vercel.app"),
   openGraph: {
     title: "Aivann Martinez",
     description:
