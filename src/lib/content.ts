@@ -9,7 +9,7 @@ export const site = {
   firstName: "aivann",
   role: "computer scientist & builder",
   /** Caption under the hero portrait. */
-  heroRole: "solutions architect & product builder",
+  heroRole: "product analyst & full-stack developer",
   location: "Quezon City, Philippines",
   tagline:
     "I find everyday problems, build and optimize solutions, and put them in front of the people who use them.",
@@ -110,7 +110,7 @@ export const caseStudies: CaseStudy[] = [
     title: "Tabbin — notes that get out of the way",
     subtitle:
       "A Windows sticky-note dock with real users: hover the screen edge, notes appear, no account or setup required.",
-    meta: "2025 — · shipped · 10 releases, 200 downloads",
+    meta: "2026 — · shipped · 10 releases, 200+ downloads",
     stack: ["Electron", "JavaScript", "Node", "electron-builder"],
     links: [
       { label: "readme", href: "https://github.com/Vanz15/tabbin#readme", external: true },
