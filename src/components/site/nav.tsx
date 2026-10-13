@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { FlippingWordSwap } from "@/components/ui/flipping-word-swap";
 
 const links = [
   { href: "#work", label: "work" },
@@ -19,12 +20,15 @@ export function Nav() {
         aria-label="Main"
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:h-[68px] md:px-8"
       >
-        <a
+        <FlippingWordSwap
           href="#top"
+          label="Aivann Martinez — back to top"
+          words={["Aivann Martinez", "Product Analyst", "Software Developer"]}
+          duration={240}
+          stagger={30}
+          autoSwapMs={5000}
           className="font-mono text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
-        >
-          Aivann Martinez
-        </a>
+        />
 
         {/* Desktop — single line */}
         <ul className="hidden items-center gap-7 md:flex">

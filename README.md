@@ -9,7 +9,7 @@ Tailwind CSS v4, and TypeScript.
 
 ## About
 
-The site is a single-page portfolio covering three project case studies, the
+The site is a single-page portfolio covering four project case studies, the
 toolbox used to build them, and an undergraduate thesis on medical AI
 reliability. All copy, links, and project data are kept in a single module so
 content changes do not require touching components.
@@ -21,6 +21,7 @@ content changes do not require touching components.
 | Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript (strict mode) |
 | UI | React 19, Tailwind CSS v4 |
+| Icons | Lucide React + inline brand SVGs |
 | Smooth scrolling | Lenis |
 | Hosting | Vercel |
 
@@ -50,11 +51,10 @@ The site is served at [http://localhost:3000](http://localhost:3000).
 
 ```text
 src/
-├── app/                  # Routes, layout, global styles
-│   ├── globals.css       # Tailwind theme, scroll-driven animations
+├── app/                  # Single route, layout, global styles
+│   ├── globals.css       # Theme tokens, scroll-driven animations
 │   └── layout.tsx        # Metadata and root layout
-├── components/
-│   └── site/             # One component per page section
+├── components/site/      # One component per page section
 └── lib/
     ├── content.ts        # All site copy and project data
     └── utils.ts          # Shared helpers
@@ -62,6 +62,9 @@ public/
 ├── images/               # Photography and project media
 ├── videos/               # Demo recordings
 └── papers/               # Thesis PDF
+scripts/
+└── sync-agent-rules.sh   # Regenerates the agent config files
+docs/agents/              # Agent workflow docs
 ```
 
 ## How the scroll animations work

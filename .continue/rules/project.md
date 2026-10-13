@@ -2,7 +2,7 @@
      Run `bash scripts/sync-agent-rules.sh` to regenerate. -->
 
 ---
-description: Project conventions for AI Website Clone Template
+description: Project conventions for the personal portfolio site
 alwaysApply: true
 ---
 <!-- BEGIN:nextjs-agent-rules -->
@@ -15,16 +15,18 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Website Reverse-Engineer Template
+# vanz-portfolio
 
 ## What This Is
-A reusable template for reverse-engineering any website into a clean, modern Next.js codebase using AI coding agents. The Next.js + shadcn/ui + Tailwind v4 base is pre-scaffolded — just run `/clone-website <url1> [<url2> ...]`.
+A personal portfolio site for Aivann Martinez. One route (`/`), fully static, deployed on Vercel at
+[aivann.dev](https://aivann.dev). There is no CMS, no API, no database, and no environment variables —
+the site is content, markup, and CSS.
 
 ## Tech Stack
 - **Framework:** Next.js 16 (App Router, React 19, TypeScript strict)
-- **UI:** shadcn/ui (Radix primitives, Tailwind CSS v4, `cn()` utility)
-- **Icons:** Lucide React (default — will be replaced/supplemented by extracted SVGs)
-- **Styling:** Tailwind CSS v4 with oklch design tokens
+- **Styling:** Tailwind CSS v4 with a hand-rolled token set in `src/app/globals.css`
+- **Icons:** `lucide-react`, plus inline brand SVGs in `src/components/site/brand-icons.tsx`
+- **Smooth scrolling:** Lenis
 - **Deployment:** Vercel
 
 ## Commands
@@ -37,35 +39,50 @@ A reusable template for reverse-engineering any website into a clean, modern Nex
 ## Code Style
 - TypeScript strict mode, no `any`
 - Named exports, PascalCase components, camelCase utils
-- Tailwind utility classes, no inline styles
+- Tailwind utility classes; no inline styles except the `--i` / `--c` stagger indices the
+  animation primitives inject
 - 2-space indentation
 - Responsive: mobile-first
 
-## Design Principles
-- **Pixel-perfect emulation** — match the target's spacing, colors, typography exactly
-- **No personal aesthetic changes during emulation phase** — match 1:1 first, customize later
-- **Real content** — use actual text and assets from the target site, not placeholders
-- **Beauty-first** — every pixel matters
+## Content
+- **All copy, links, and project data live in `src/lib/content.ts`.** Content changes must not
+  require touching components.
+- To add a case study, append one `CaseStudy` object to `caseStudies`. `work.tsx` picks the
+  video / paper / image variant automatically.
+
+## Design System
+- The palette is documented in `src/app/globals.css` — warm paper background, ink foreground,
+  and a single saturated pen-blue accent. Do not introduce a second accent color.
+  The one exception is the highlighter wash (`--highlight-wash` in `globals.css`),
+  used for marker-pen marks behind a word. It is a surface tint, not an accent.
+- Radius, spacing, and type scale are Tailwind theme tokens; do not hardcode new arbitrary values
+  when an existing token fits.
+- Motion for the site sections is **CSS scroll-driven** (`animation-timeline: view()`), not a JavaScript
+  animation library. Above-the-fold content uses the one-shot `.reveal-in` path because it cannot use a
+  `view()` timeline.
+- Exception: components vendored from a shadcn registry under `src/components/ui/` bring their own
+  animation library and their own styling. Treat those files as vendored — adapt them to this project's
+  tokens at the call site rather than rewriting them, and do not convert them to CSS scroll-driven.
+- Every animation must stay behind `prefers-reduced-motion: reduce`. The site must remain fully
+  readable and navigable with animation disabled.
 
 ## Project Structure
 ```
 src/
-  app/              # Next.js routes
-  components/       # React components
-    ui/             # shadcn/ui primitives
-    icons.tsx       # Extracted SVG icons as React components
+  app/                  # Single route, layout, global styles
+  components/
+    site/               # One component per page section, plus animation primitives
+    ui/                 # Vendored shadcn-registry components
   lib/
-    utils.ts        # cn() utility (shadcn)
-  types/            # TypeScript interfaces
-  hooks/            # Custom React hooks
+    content.ts          # All site copy and project data
+    utils.ts            # cn() helper
 public/
-  images/           # Downloaded images from target site
-  videos/           # Downloaded videos from target site
-  seo/              # Favicons, OG images, webmanifest
-docs/
-  research/         # Inspection output (design tokens, components, layout)
-  design-references/ # Screenshots and visual references
-scripts/            # Asset download scripts
+  images/               # Photography and project media
+  videos/               # Demo recordings
+  papers/               # Thesis PDF
+scripts/
+  sync-agent-rules.sh   # Regenerates the agent config files below
+docs/agents/            # Agent workflow docs
 ```
 
 ## Agent skills
@@ -80,86 +97,4 @@ Single-context: one `GLOSSARY.md` at the repo root and `docs/adr/`. See `docs/ag
 
 ## MOST IMPORTANT NOTES
 - When launching Claude Code agent teams, ALWAYS have each teammate work in their own worktree branch and merge everyone's work at the end, resolving any merge conflicts smartly since you are basically serving the orchestrator role and have full context to our goals, work given, work achieved, and desired outcomes.
-- After editing `AGENTS.md`, run `bash scripts/sync-agent-rules.sh` to regenerate platform-specific instruction files.
-- After editing `.claude/skills/clone-website/SKILL.md`, run `node scripts/sync-skills.mjs` to regenerate the skill for all platforms.
-
-# Website Inspection Guide
-
-## How to Reverse-Engineer Any Website
-
-This guide outlines what to capture when inspecting a target website via Chrome MCP or browser DevTools.
-
-## Phase 1: Visual Audit
-
-### Screenshots to Capture
-- [ ] Every distinct page — desktop, tablet, mobile
-- [ ] Dark mode variants (if applicable)
-- [ ] Light mode variants (if applicable)
-- [ ] Key interaction states (hover, active, open menus, modals)
-- [ ] Loading/skeleton states
-- [ ] Empty states
-- [ ] Error states
-
-### Design Tokens to Extract
-- [ ] **Colors** — background, text (primary/secondary/muted), accent, border, hover, error, success, warning
-- [ ] **Typography** — font family, sizes (h1-h6, body, caption, label), weights, line heights, letter spacing
-- [ ] **Spacing** — padding/margin patterns (look for a scale: 4px, 8px, 12px, 16px, 24px, 32px, etc.)
-- [ ] **Border radius** — buttons, cards, avatars, inputs
-- [ ] **Shadows/elevation** — card shadows, dropdown shadows, modal overlay
-- [ ] **Breakpoints** — when does the layout shift? (inspect with DevTools responsive mode)
-- [ ] **Icons** — which icon library? custom SVGs? sizes?
-- [ ] **Avatars** — sizes, shapes, fallback behavior
-- [ ] **Buttons** — all variants (primary, secondary, ghost, icon-only, danger)
-- [ ] **Inputs** — text fields, textareas, selects, checkboxes, toggles
-
-## Phase 2: Component Inventory
-
-For each distinct UI component, document:
-1. **Name** — what would you call this component?
-2. **Structure** — what HTML elements / child components does it contain?
-3. **Variants** — does it have different sizes, colors, or states?
-4. **States** — default, hover, active, disabled, loading, error, empty
-5. **Responsive behavior** — how does it change at different breakpoints?
-6. **Interactions** — click, hover, focus, keyboard navigation
-7. **Animations** — transitions, entrance/exit animations, micro-interactions
-
-### Common Components to Look For
-- Navigation (top bar, sidebar, bottom bar)
-- Cards / list items
-- Buttons and links
-- Forms and inputs
-- Modals and dialogs
-- Dropdowns and menus
-- Tabs and segmented controls
-- Avatars and user badges
-- Loading skeletons
-- Toast notifications
-- Tooltips and popovers
-
-## Phase 3: Layout Architecture
-
-- [ ] **Grid system** — CSS Grid? Flexbox? Fixed widths?
-- [ ] **Column layout** — how many columns at each breakpoint?
-- [ ] **Max-width** — main content area max-width
-- [ ] **Sticky elements** — header, sidebar, floating buttons
-- [ ] **Z-index layers** — navigation, modals, tooltips, overlays
-- [ ] **Scroll behavior** — infinite scroll, pagination, virtual scrolling
-
-## Phase 4: Technical Stack Analysis
-
-- [ ] **Framework** — React? Vue? Angular? Check `__NEXT_DATA__`, `__NUXT__`, `ng-version`
-- [ ] **CSS approach** — Tailwind (utility classes), CSS Modules, Styled Components, Emotion, vanilla CSS
-- [ ] **State management** — Redux (check DevTools), React Query, Zustand, Pinia
-- [ ] **API patterns** — REST, GraphQL (check network tab for `/graphql` requests)
-- [ ] **Font loading** — Google Fonts, self-hosted, system fonts
-- [ ] **Image strategy** — CDN, lazy loading, srcset, WebP/AVIF
-- [ ] **Animation library** — Framer Motion, GSAP, CSS transitions only
-
-## Phase 5: Documentation Output
-
-After inspection, create these files in `docs/research/`:
-1. `DESIGN_TOKENS.md` — All extracted colors, typography, spacing
-2. `COMPONENT_INVENTORY.md` — Every component with structure notes
-3. `LAYOUT_ARCHITECTURE.md` — Page layouts, grid system, responsive behavior
-4. `INTERACTION_PATTERNS.md` — Animations, transitions, hover states
-5. `TECH_STACK_ANALYSIS.md` — What the site uses and our chosen equivalents
+- After editing `AGENTS.md`, run `bash scripts/sync-agent-rules.sh` to regenerate platform-specific instruction files. CI fails if the generated copies drift.

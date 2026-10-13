@@ -1,4 +1,5 @@
 import { site } from "@/lib/content";
+import { Signature } from "@/components/ui/signature";
 import { Reveal } from "./reveal";
 import { TypeText } from "./typetext";
 
@@ -11,10 +12,10 @@ export function Footer() {
           <p className="section-label">contact</p>
           <h2 className="mt-3 max-w-[24ch] text-2xl font-semibold tracking-tight md:text-4xl">
             <>
-            <TypeText text="Curious about something?" speed={26} />
-            <br />
-            <TypeText text="Let&rsquo;s figure it out." speed={26} />
-          </>
+              <TypeText text="Curious about something?" speed={26} />
+              <br />
+              <TypeText text="Let&rsquo;s figure it out." speed={26} />
+            </>
           </h2>
         </Reveal>
 
@@ -66,11 +67,22 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Giant wordmark, cropped at the baseline */}
-      <div aria-hidden className="select-none overflow-hidden">
-        <p className="wordmark translate-y-[18%] whitespace-nowrap text-center font-semibold text-foreground/90">
-          AIVANN
-        </p>
+      {/* Signature wordmark — glyph outlines drawn on an SVG from /LastoriaBoldRegular.otf.
+          The wrapper owns the height, because the SVG's viewBox is now the tight
+          ink bounds of the glyphs: preserveAspectRatio scales it to fill this
+          box, so this value is the signature's real rendered size. */}
+      <div
+        aria-hidden
+        className="flex h-[clamp(4.5rem,11vw,12rem)] items-center justify-center overflow-hidden"
+      >
+        <Signature
+          text="Aivann"
+          fontSize={50}
+          duration={1.1}
+          inView
+          once
+          className="h-full w-full"
+        />
       </div>
     </footer>
   );

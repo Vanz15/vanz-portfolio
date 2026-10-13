@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "lenis/dist/lenis.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -51,7 +50,12 @@
 }
 
 :root {
-  /* Field Notes palette — see design.md §2 */
+  /* Field Notes palette */
+  /* Highlighter behind the words. The one deliberate departure from the
+     single-accent rule: a marker colour reads as a different tool from ink,
+     which is the whole point of the Field Notes motif. Muted to stay inside
+     the warm-paper world rather than read as a UI accent. */
+  --highlight-wash: #e8dfae;
   --background: #faf8f4; /* paper */
   --foreground: #1b1b18; /* ink */
   --surface: #f1ede6; /* paper-dim bands */
@@ -178,6 +182,31 @@
   }
 }
 
+/* The card slides and fades: a card that only slides keeps its border-top at
+   full opacity for the whole ramp, so the rule reads as "preloaded" before the
+   label and copy have arrived. Fading the card and its lines together is safe —
+   opacities multiply, and both reach 1.
+   Travels less than the lines it holds (10px against their 14px): stacked
+   movement adds up, and a paragraph that travels 30px reads as broken. */
+@keyframes slide-fade-through {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  26% {
+    opacity: 1;
+    transform: none;
+  }
+  74% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
 /* ---- Parallax drift ------------------------------------------------
    An element travels its own height as it crosses the viewport, slower than
    the page scrolls, so it reads as sitting at a different depth. One timeline
@@ -247,12 +276,6 @@
 .shadow-warm {
   box-shadow: 0 1px 2px rgba(27, 27, 24, 0.08), 0 8px 24px rgba(27, 27, 24, 0.07);
 }
-/* Giant footer wordmark, clipped at the baseline like bermawy */
-.wordmark {
-  font-size: clamp(4.5rem, 17vw, 15rem);
-  line-height: 0.78;
-  letter-spacing: -0.04em;
-}
 
 /* Scroll-linked fade: content fades in as it enters and fades back out as it
    leaves, so the page never feels like a static wall of text. Pure CSS using
@@ -279,6 +302,32 @@
     animation-timeline: --stagger;
     /* Child N runs 4% later than child N-1. */
     animation-range: cover calc(6% + var(--i, 0) * 4%) cover calc(94% - var(--i, 0) * 4%);
+  }
+
+  /* ---- Per-element cascade (`parts`) --------------------------------
+     Every line inside a card runs on its own view() timeline, so the rule,
+     label, heading and copy slide in one after another — and peel off one by
+     one on the way out. Sharing the container's single timeline would move a
+     dozen lines as one flicker instead of a sequence. `--i` orders the lines
+     within a card, `--c` keeps the three columns cascading across the grid. */
+  .stagger-parts {
+    view-timeline-name: none;
+  }
+  /* The card fades as well as sliding: a card that only slides keeps its
+     border-top at full opacity for the whole ramp, so the rule reads as
+     "preloaded" before the label and copy have arrived. Fading the card and
+     its lines together is safe — opacities multiply, and both reach 1. */
+  .stagger-parts > * {
+    animation: slide-fade-through linear both;
+    animation-timeline: view();
+    animation-range: cover calc(6% + var(--c, 0) * 5%) cover calc(94% - var(--c, 0) * 5%);
+  }
+  .stagger-parts > * > * {
+    animation: reveal-stagger linear both;
+    animation-timeline: view();
+    animation-range:
+      cover calc(10% + var(--i, 0) * 6% + var(--c, 0) * 5%)
+      cover calc(90% - var(--i, 0) * 6% - var(--c, 0) * 5%);
   }
   /* `cover` is entry + contain + exit as one ramp; fading over the first and
      last 30% keeps the middle solidly visible. */
@@ -469,6 +518,8 @@
   }
   .reveal,
   .stagger > *,
+  .stagger-parts > *,
+  .stagger-parts > * > *,
   .reveal-lines > *,
   .reveal-in > *,
   .drift {

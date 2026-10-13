@@ -1,7 +1,12 @@
 import { site } from "@/lib/content";
-import { Reveal } from "./reveal";
+import { KineticTextReveal } from "@/components/ui/kinetic-text-reveal";
 import { Stagger } from "./stagger";
-import { TypeText } from "./typetext";
+
+/** Last word starts at (words - 1) * stagger, then fades in over FADE_SECONDS. */
+const LAND_SECONDS = 3;
+const FADE_SECONDS = 0.72;
+const WORD_COUNT = site.intro.trim().split(/\s+/).length;
+const STAGGER = (LAND_SECONDS - FADE_SECONDS) / (WORD_COUNT - 1);
 
 const pillars = [
   {
@@ -25,13 +30,27 @@ export function Intro() {
   return (
     <section aria-label="Introduction" className="border-t border-border/70">
       <div className="mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
-        <Reveal>
-          <p className="max-w-[62ch] text-lg leading-relaxed md:text-xl">
-            <TypeText text={site.intro} speed={14} cursor />
-          </p>
-        </Reveal>
+        {/* The kinetic reveal owns this block's entrance and exit, so it replaces the
+            scroll-fade Reveal rather than stacking with it. Stagger is derived
+            from the copy so the paragraph always lands in LAND_SECONDS no
+            matter how long the intro grows. */}
+        <p className="max-w-[62ch] text-lg leading-relaxed md:text-xl">
+          <KineticTextReveal
+            text={site.intro}
+            splitBy="words"
+            direction="up"
+            distance={16}
+            stagger={STAGGER}
+            transition={{ duration: FADE_SECONDS, ease: [0.22, 1, 0.36, 1] }}
+            blur
+            trigger="view"
+          />
+        </p>
 
-        <Stagger className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-3">
+        <Stagger
+          parts
+          className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-3"
+        >
             {pillars.map((pillar) => (
               <div
                 key={pillar.key}

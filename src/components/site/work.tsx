@@ -1,10 +1,13 @@
 import { ArrowUpRight } from "lucide-react";
 import { caseStudies, type CaseStudy } from "@/lib/content";
+import { KineticTextReveal } from "@/components/ui/kinetic-text-reveal";
 import { CaseVideo } from "./case-video";
 import { PaperRequest } from "./paper-request";
-import { RevealLines } from "./reveal-lines";
 import { Stagger } from "./stagger";
 import { Reveal } from "./reveal";
+
+const workCaption =
+  "A collection of problems I found worth solving, things I built to solve them, and the thinking behind every decision.";
 
 const stepLabel: Record<string, string> = {
   problem: "the problem",
@@ -142,16 +145,25 @@ export function Work() {
   return (
     <section id="work" className="border-t border-border/70">
       <div className="mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
-        <RevealLines>
+        <Reveal>
           {/* one of the page's three small-caps labels */}
           <p className="section-label">selected works</p>
-          <h2 className="mt-3 max-w-[38ch] text-2xl font-semibold tracking-tight md:text-4xl">
-            A collection of problems I found worth solving,
-            <br className="hidden md:inline" /> things I built to solve them,
-            and the thinking
-            <br className="hidden md:inline" /> behind every decision.
-          </h2>
-        </RevealLines>
+        </Reveal>
+        {/* RevealLines had to go: it animates JSX children, and the caption is
+            now plain strings so KineticTextReveal can split them into words.
+            The mark sits between two kinetic runs because KineticTextReveal
+            only accepts a string — a mark cannot live inside it. The explicit
+            <br>s went with RevealLines; the measure is unchanged, so the browser
+            picks the wrap points. */}
+        <h2 className="mt-3 max-w-[38ch] text-2xl font-semibold tracking-tight md:text-4xl">
+          <KineticTextReveal
+            text={workCaption}
+            splitBy="words"
+            direction="up"
+            blur
+            trigger="view"
+          />
+        </h2>
 
         <div className="mt-12 divide-y divide-border/70 border-y border-border/70">
           {caseStudies.map((study) => (

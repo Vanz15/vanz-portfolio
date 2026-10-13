@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import { site } from "@/lib/content";
+import { AnnotatedText } from "@/components/ui/annotated-text";
 import { PrintIn } from "./print-in";
 import { Reveal } from "./reveal";
 import { TypeText } from "./typetext";
@@ -28,12 +29,44 @@ export function Hero() {
             <TypeText text="hi, i'm aivann" speed={70} trigger="mount" />
           </p>
 
+          {/* Typewriter on the h1 is gone: the hand-drawn marks need to sit
+              under settled glyphs, not under a moving character cursor. */}
           <h1 className="mt-5 max-w-[24ch] text-4xl font-semibold tracking-tighter md:text-5xl md:leading-[1.06]">
-            <TypeText
-              text="I find problems, build solutions, and ship them."
-              speed={26}
-              trigger="mount"
-            />
+            I{" "}
+            <AnnotatedText
+              variant="highlight"
+              color="text-[var(--highlight-wash)]"
+              delay={0.5}
+            >
+              find problems
+            </AnnotatedText>
+            ,{" "}
+            <AnnotatedText
+              variant="doubleUnderline"
+              color="text-accent"
+              delay={0.8}
+            >
+              build solutions
+            </AnnotatedText>
+            , and
+            <br />
+            <AnnotatedText
+              variant="underline"
+              color="text-foreground"
+              delay={1.1}
+            >
+              ship
+            </AnnotatedText>
+            {/* The space lives inside the nowrap wrapper, not between the two
+                spans: a JSX text node here would give the browser a line-break
+                opportunity and strand "them" on its own line. */}
+            <AnnotatedText
+              variant="circle"
+              color="text-accent"
+              delay={1.35}
+            >
+              {" "}them.
+            </AnnotatedText>
           </h1>
 
           <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-muted-foreground md:text-lg">

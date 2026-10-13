@@ -14,11 +14,7 @@
 #   Roo Code, Aider, Augment Code, Kiro
 #
 # Agents with their own thin pointer files (created manually):
-#   Claude Code  → CLAUDE.md (@AGENTS.md import)
-#   Gemini CLI   → GEMINI.md (@AGENTS.md import)
 #   Cursor       → .cursor/rules/project.mdc (pointer)
-#   Windsurf     → .windsurfrules (pointer)
-#   Aider        → .aider.conf.yml (read: [AGENTS.md])
 
 set -euo pipefail
 
@@ -74,7 +70,7 @@ write_file "$REPO_ROOT/.clinerules" "$RESOLVED_CONTENT"
 
 # Continue — .continue/rules/project.md
 CONTINUE_FRONTMATTER="---
-description: Project conventions for AI Website Clone Template
+description: Project conventions for the personal portfolio site
 alwaysApply: true
 ---"
 write_file "$REPO_ROOT/.continue/rules/project.md" "$CONTINUE_FRONTMATTER

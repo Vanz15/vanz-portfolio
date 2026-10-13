@@ -8,16 +8,18 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Website Reverse-Engineer Template
+# vanz-portfolio
 
 ## What This Is
-A reusable template for reverse-engineering any website into a clean, modern Next.js codebase using AI coding agents. The Next.js + shadcn/ui + Tailwind v4 base is pre-scaffolded — just run `/clone-website <url1> [<url2> ...]`.
+A personal portfolio site for Aivann Martinez. One route (`/`), fully static, deployed on Vercel at
+[aivann.dev](https://aivann.dev). There is no CMS, no API, no database, and no environment variables —
+the site is content, markup, and CSS.
 
 ## Tech Stack
 - **Framework:** Next.js 16 (App Router, React 19, TypeScript strict)
-- **UI:** shadcn/ui (Radix primitives, Tailwind CSS v4, `cn()` utility)
-- **Icons:** Lucide React (default — will be replaced/supplemented by extracted SVGs)
-- **Styling:** Tailwind CSS v4 with oklch design tokens
+- **Styling:** Tailwind CSS v4 with a hand-rolled token set in `src/app/globals.css`
+- **Icons:** `lucide-react`, plus inline brand SVGs in `src/components/site/brand-icons.tsx`
+- **Smooth scrolling:** Lenis
 - **Deployment:** Vercel
 
 ## Commands
@@ -30,35 +32,50 @@ A reusable template for reverse-engineering any website into a clean, modern Nex
 ## Code Style
 - TypeScript strict mode, no `any`
 - Named exports, PascalCase components, camelCase utils
-- Tailwind utility classes, no inline styles
+- Tailwind utility classes; no inline styles except the `--i` / `--c` stagger indices the
+  animation primitives inject
 - 2-space indentation
 - Responsive: mobile-first
 
-## Design Principles
-- **Pixel-perfect emulation** — match the target's spacing, colors, typography exactly
-- **No personal aesthetic changes during emulation phase** — match 1:1 first, customize later
-- **Real content** — use actual text and assets from the target site, not placeholders
-- **Beauty-first** — every pixel matters
+## Content
+- **All copy, links, and project data live in `src/lib/content.ts`.** Content changes must not
+  require touching components.
+- To add a case study, append one `CaseStudy` object to `caseStudies`. `work.tsx` picks the
+  video / paper / image variant automatically.
+
+## Design System
+- The palette is documented in `src/app/globals.css` — warm paper background, ink foreground,
+  and a single saturated pen-blue accent. Do not introduce a second accent color.
+  The one exception is the highlighter wash (`--highlight-wash` in `globals.css`),
+  used for marker-pen marks behind a word. It is a surface tint, not an accent.
+- Radius, spacing, and type scale are Tailwind theme tokens; do not hardcode new arbitrary values
+  when an existing token fits.
+- Motion for the site sections is **CSS scroll-driven** (`animation-timeline: view()`), not a JavaScript
+  animation library. Above-the-fold content uses the one-shot `.reveal-in` path because it cannot use a
+  `view()` timeline.
+- Exception: components vendored from a shadcn registry under `src/components/ui/` bring their own
+  animation library and their own styling. Treat those files as vendored — adapt them to this project's
+  tokens at the call site rather than rewriting them, and do not convert them to CSS scroll-driven.
+- Every animation must stay behind `prefers-reduced-motion: reduce`. The site must remain fully
+  readable and navigable with animation disabled.
 
 ## Project Structure
 ```
 src/
-  app/              # Next.js routes
-  components/       # React components
-    ui/             # shadcn/ui primitives
-    icons.tsx       # Extracted SVG icons as React components
+  app/                  # Single route, layout, global styles
+  components/
+    site/               # One component per page section, plus animation primitives
+    ui/                 # Vendored shadcn-registry components
   lib/
-    utils.ts        # cn() utility (shadcn)
-  types/            # TypeScript interfaces
-  hooks/            # Custom React hooks
+    content.ts          # All site copy and project data
+    utils.ts            # cn() helper
 public/
-  images/           # Downloaded images from target site
-  videos/           # Downloaded videos from target site
-  seo/              # Favicons, OG images, webmanifest
-docs/
-  research/         # Inspection output (design tokens, components, layout)
-  design-references/ # Screenshots and visual references
-scripts/            # Asset download scripts
+  images/               # Photography and project media
+  videos/               # Demo recordings
+  papers/               # Thesis PDF
+scripts/
+  sync-agent-rules.sh   # Regenerates the agent config files below
+docs/agents/            # Agent workflow docs
 ```
 
 ## Agent skills
@@ -73,7 +90,4 @@ Single-context: one `GLOSSARY.md` at the repo root and `docs/adr/`. See `docs/ag
 
 ## MOST IMPORTANT NOTES
 - When launching Claude Code agent teams, ALWAYS have each teammate work in their own worktree branch and merge everyone's work at the end, resolving any merge conflicts smartly since you are basically serving the orchestrator role and have full context to our goals, work given, work achieved, and desired outcomes.
-- After editing `AGENTS.md`, run `bash scripts/sync-agent-rules.sh` to regenerate platform-specific instruction files.
-- After editing `.claude/skills/clone-website/SKILL.md`, run `node scripts/sync-skills.mjs` to regenerate the skill for all platforms.
-
-@docs/research/INSPECTION_GUIDE.md
+- After editing `AGENTS.md`, run `bash scripts/sync-agent-rules.sh` to regenerate platform-specific instruction files. CI fails if the generated copies drift.
